@@ -16,7 +16,7 @@ namespace Testing
             Assert.IsNotNull(response);
             Assert.IsTrue("success".Equals(response.Result));
             Assert.IsTrue("USD".Equals(response.BaseCode));
-            Assert.IsTrue(response.Rates.Count > 0);
+            Assert.IsTrue(response.Rates.Any());
 
         }
 

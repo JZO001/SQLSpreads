@@ -19,7 +19,7 @@ namespace Testing
             Assert.AreEqual(MergeAndSortLists.A.Count() + MergeAndSortLists.B.Count(), result.Count);
 
             bool isAscOrder = true;
-            if (result.Count > 0)
+            if (result.Any())
             {
                 // check ascending order
                 int prevItem = result[0];
