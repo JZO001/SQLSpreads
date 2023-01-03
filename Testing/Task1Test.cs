@@ -15,9 +15,6 @@ namespace Testing
             // not null
             Assert.IsNotNull(result);
 
-            // list items count = A.Count + B.Count
-            Assert.AreEqual(MergeAndSortLists.A.Count() + MergeAndSortLists.B.Count(), result.Count);
-
             bool isAscOrder = true;
             if (result.Any())
             {

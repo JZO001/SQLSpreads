@@ -19,14 +19,15 @@
 
         public static readonly int[] A = { 15, 24, 11, 3, 91, 82, 16, 77, 2, 10 };
         public static readonly int[] B = { 25, 93, 82, 22, 24 };
+        public static readonly int[] C = { 3, 16, 27 };
 
         /// <summary>Executes the task 1.</summary>
         /// <returns>The new list with the ordered content</returns>
         public static List<int> ExecuteTask1()
         {
             // new list
-            List<int> result = new(A); // all numbers from list A
-            result.AddRange(B); // and B but do not include the numbers in C
+            List<int> result = new(A.Where(item => !C.Contains(item))); // all numbers from list A, using C to filter out items
+            result.AddRange(B.Where(item => !C.Contains(item))); // than B, using C also to filter out items
             result.Sort(); // Return the numbers in ascending order
             return result;
         }

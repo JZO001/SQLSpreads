@@ -51,16 +51,15 @@ namespace Testing
         [TestMethod]
         public void TestCalculate2()
         {
-            List<(int, decimal)> result = Task.Run(() => DbQuery.Calculate2(_connectionString!)).ConfigureAwait(false).GetAwaiter().GetResult();
+            decimal result = Task.Run(() => DbQuery.Calculate2(_connectionString!)).ConfigureAwait(false).GetAwaiter().GetResult();
 
-            Assert.IsNotNull(result);
-            Assert.IsTrue(result.Count == 12); // with this dataset, the expected row number is 12
+            Assert.IsTrue(result == 3678); // with this dataset, the expected number is 3756 - 78 = 3678
 
             using (FileStream fs = new FileStream("SQL Output Calc 2.txt", FileMode.Create, FileAccess.Write))
             {
                 using (StreamWriter sw = new StreamWriter(fs))
                 {
-                    result.ForEach(row => sw.WriteLine($"PeriodKey: {row.Item1}, Sum.Amount: {row.Item2}"));
+                    sw.WriteLine($"Sum.Amount: {result.ToString("#0")}");
                 }
             }
 
