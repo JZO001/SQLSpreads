@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using SQLSpreadsTestProjectDec22.Test4;
+using System.Collections.Generic;
 
 namespace Testing
 {
@@ -42,7 +43,7 @@ namespace Testing
             {
                 using (StreamWriter sw = new StreamWriter(fs))
                 {
-                    result.ForEach(row => sw.WriteLine($"PeriodKey: {row.Item1}, Sum.Amount: {row.Item2}"));
+                    result.ForEach(row => sw.WriteLine($"PeriodKey: {row.Item1}, Sum.Amount: {row.Item2.ToString("0#")}"));
                 }
             }
 
@@ -51,15 +52,15 @@ namespace Testing
         [TestMethod]
         public void TestCalculate2()
         {
-            decimal result = Task.Run(() => DbQuery.Calculate2(_connectionString!)).ConfigureAwait(false).GetAwaiter().GetResult();
+            List<(int, decimal)> result = Task.Run(() => DbQuery.Calculate2(_connectionString!)).ConfigureAwait(false).GetAwaiter().GetResult();
 
-            Assert.IsTrue(result == 3678); // with this dataset, the expected number is 3756 - 78 = 3678
+            Assert.IsTrue(result.Count == 12); // with this dataset, the expected row number is 12
 
             using (FileStream fs = new FileStream("SQL Output Calc 2.txt", FileMode.Create, FileAccess.Write))
             {
                 using (StreamWriter sw = new StreamWriter(fs))
                 {
-                    sw.WriteLine($"Sum.Amount: {result.ToString("#0")}");
+                    result.ForEach(row => sw.WriteLine($"PeriodKey: {row.Item1}, Sum.Amount: {row.Item2.ToString("#0")}"));
                 }
             }
 

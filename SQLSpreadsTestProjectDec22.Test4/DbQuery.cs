@@ -17,41 +17,13 @@ namespace SQLSpreadsTestProjectDec22.Test4
             return await Query(connectionString, query);
         }
 
-        public static async Task<decimal> Calculate2(string connectionString)
+        public static async Task<List<(int, decimal)>> Calculate2(string connectionString)
         {
-            decimal result = 0;
-
-            string query = "SELECT (SELECT SUM(Amount) " +
-                "FROM fact_Finance as ff " +
-                "WHERE ff.AccountKey <> 1010) - " +
-                "(SELECT SUM(Amount) " +
-                "FROM fact_Finance as ff " +
-                "WHERE ff.AccountKey = 1010) as SumAmount";
-
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                try
-                {
-                    connection.Open();
-
-                    using (SqlCommand command = new SqlCommand(query, connection))
-                    {
-                        using (SqlDataReader reader = await command.ExecuteReaderAsync())
-                        {
-                            if (reader.Read())
-                            {
-                                result = (decimal)reader["SumAmount"];
-                            }
-                        }
-                    }
-                }
-                finally
-                {
-                    if (connection.State == ConnectionState.Open) connection.Close();
-                }
-            }
-
-            return result;
+            string query = "SELECT ff1.PeriodKey, (SUM(ff1.Amount) - (SELECT fd2.Amount FROM fact_Finance fd2 WHERE fd2.AccountKey = 1010 AND ff1.PeriodKey = fd2.PeriodKey)) as SumAmount " + 
+                "FROM fact_Finance as ff1 " + 
+                "WHERE ff1.AccountKey <> 1010 " + 
+                "GROUP BY ff1.PeriodKey";
+            return await Query(connectionString, query);
         }
 
         private static async Task<List<(int, decimal)>> Query(string connectionString, string sqlQuery)
